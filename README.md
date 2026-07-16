@@ -22,13 +22,10 @@ can *see happen*, not just read about. No API key, no cost — it runs
 entirely on CPU with a small local model.
 
 ## How it works
-
-```
 "formal" example sentences  ─┐
-                              ├─► mean activation (layer L) ─┐
+├─► mean activation (layer L) ─┐
 "casual" example sentences  ─┘                                ├─► direction = formal - casual
-                              ├─► mean activation (layer L) ─┘
-```
+├─► mean activation (layer L) ─┘
 
 1. Pick a concept (e.g. `formality`) and a layer `L`.
 2. Run a handful of hand-written contrastive sentence pairs (formal vs.
@@ -47,10 +44,27 @@ of activations, not a trained probe or sparse autoencoder feature) so it's
 easy to run on a laptop and easy to explain end-to-end in an interview or
 application essay.
 
+## Relationship to Anthropic's "Golden Gate Claude"
+
+In May 2024, Anthropic published interpretability research decomposing Claude 3
+Sonnet's internal activations into millions of human-interpretable "features"
+using sparse autoencoders, then publicly demoed a version with the "Golden
+Gate Bridge" feature pinned to a very high value — producing a model that
+steered every conversation back toward the bridge, unprompted.
+
+This project is a much smaller and more manual version of the same broad
+idea (find a direction in activation space, add it back in at generation
+time to steer behavior) — but instead of discovering a feature automatically
+via a sparse autoencoder trained on a large model, it derives a concept
+direction by hand from a small set of contrastive example sentences on a
+124M-parameter open model. Same lineage of technique, much simpler
+implementation — which is exactly what makes it tractable to build and
+fully understand end to end in a weekend.
+
 ## Setup
 
 ```bash
-git clone <this-repo>
+git clone https://github.com/rohitvishnuu/concept-steering-playground.git
 cd concept-steering-playground
 pip install -r requirements.txt
 ```
@@ -79,9 +93,27 @@ python cli.py "I think that the future of technology" --concept optimism --layer
 ```
 
 This generates completions across a range of alpha values and writes a
-markdown table to `output/sweep_<concept>_<timestamp>.md`. Run this once for
-each concept and commit the reports — a real sweep table is much more
-convincing on a portfolio than a description of one.
+markdown table to `output/sweep_<concept>_<timestamp>.md`.
+
+## Example Result
+
+Steering the `optimism` concept at **layer 9** produces a clean, fluent shift:
+
+| alpha | prompt: "I think that the future of technology..." |
+|---|---|
+| baseline | "...is going to be pretty much digital," says the president of the National Association of Broadcasters, who is a vocal critic of the FCC's plans..." |
+| +1.5 | "...is bright and I have great faith in the future of the world." |
+| +3.0 | "...is bright and I have great faith in the future of the world." — John P. Martin, Chairman and CEO... |
+
+Full sweep: [`output/sweep_optimism_20260716_023004.md`](output/sweep_optimism_20260716_023004.md)
+
+**A layer-choice finding:** the same steering strengths that work cleanly at
+layer 9 break down into incoherent fragments at layer 6 — see
+[`output/sweep_optimism_20260716_022742.md`](output/sweep_optimism_20260716_022742.md)
+and the layer-6 `formality` sweep, which degenerates entirely
+([`output/sweep_formality_20260716_023121.md`](output/sweep_formality_20260716_023121.md)).
+Steerability is clearly layer- and concept-dependent, not just a function of
+alpha magnitude.
 
 ## Testing
 
@@ -90,17 +122,14 @@ python -m pytest test_steering.py -v
 ```
 
 These tests check the contrastive-pair dataset (balance, no duplicates, no
-empty examples) without needing to load a model — fast and free to run in
-CI.
+empty examples) without needing to load a model — fast and free to run in CI.
 
 ## Choosing a layer
 
 Middle layers (roughly layers 4–8 out of GPT-2's 12) tend to carry the most
 semantically abstract, steerable representations — very early layers are
 closer to raw token identity, very late layers are closer to next-token
-logits. The `--layer` / sidebar slider lets you sweep this yourself; part of
-the value of this project is seeing *empirically* which layer steers best
-for a given concept, rather than taking that on faith.
+logits. The `--layer` / sidebar slider lets you sweep this yourself.
 
 ## Limitations
 
@@ -110,22 +139,17 @@ for a given concept, rather than taking that on faith.
   success rate," not just qualitative examples.
 - Mean-difference-of-activations is a blunt instrument compared to a trained
   linear probe or an SAE feature — it can pick up correlated concepts
-  alongside the target one (e.g. "formality" may partially entangle with
-  "sentence length").
+  alongside the target one.
 - Only tested on GPT-2-scale models here; larger models may need different
   layer choices or steering magnitudes.
 - No automatic detection of when steering has broken the model's fluency
-  entirely (very high `alpha` values can produce degenerate text) — this is
-  visible qualitatively in the slider demo but not measured numerically.
+  entirely — visible qualitatively but not measured numerically.
 
 ## Possible extensions
 
-- Add a fluency/perplexity check alongside each steered generation, so you
-  can quantify the fluency-vs-steering-strength tradeoff, not just eyeball it.
-- Compare mean-difference vectors against a proper linear probe trained to
-  classify formal vs. casual text, and see how much the two directions agree.
-- Extend to a mid-size open model (e.g. Llama-3-8B) on a GPU and see whether
-  steering directions transfer across model scales.
+- Add a fluency/perplexity check alongside each steered generation.
+- Compare mean-difference vectors against a proper trained linear probe.
+- Extend to a mid-size open model (e.g. Llama-3-8B) on a GPU.
 
 ## License
 
