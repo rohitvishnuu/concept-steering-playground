@@ -1,0 +1,63 @@
+{
+  "formality": {
+    "description": "Casual/slang phrasing vs. formal/professional phrasing of the same idea.",
+    "positive": [
+      "I would like to formally request your assistance with this matter.",
+      "We regret to inform you that the proposal has been declined.",
+      "Please do not hesitate to contact us should you require further information.",
+      "It is with great pleasure that I accept this esteemed position.",
+      "Kindly find attached the requested documentation for your review.",
+      "I am writing to express my sincere gratitude for your consideration.",
+      "The committee has convened to deliberate upon the matter at hand.",
+      "We respectfully request that you reconsider your position on this issue."
+    ],
+    "negative": [
+      "hey can u help me out with this thing",
+      "yo sorry but we're gonna have to pass on the proposal",
+      "hit us up if u need anything else lol",
+      "omg yes i'll totally take the job, so hyped",
+      "here's the file u wanted, check it out",
+      "thanks so much, seriously means a lot",
+      "so we all got together to talk about the thing",
+      "can u maybe like rethink this a bit"
+    ]
+  },
+  "optimism": {
+    "description": "Pessimistic/bleak framing vs. optimistic/hopeful framing of similar situations.",
+    "positive": [
+      "This is a wonderful opportunity for growth and I'm excited about what's ahead.",
+      "Things are looking up, and I believe the best is yet to come.",
+      "Every challenge is a chance to learn something new and become stronger.",
+      "I'm confident we'll figure this out together, one step at a time.",
+      "The future is full of possibility and I can't wait to see what happens.",
+      "There's so much to be grateful for, even in difficult moments.",
+      "I trust that things will work out for the best in the end.",
+      "This setback is temporary, and brighter days are just around the corner."
+    ],
+    "negative": [
+      "This is probably going to fail like everything else does.",
+      "Things keep getting worse and I don't see it improving.",
+      "Every challenge just reminds me how little control we have.",
+      "I doubt we'll figure this out, honestly.",
+      "The future feels uncertain and mostly bleak from here.",
+      "It's hard to find much to be grateful for right now.",
+      "I don't expect things to work out the way we'd hope.",
+      "This setback feels like the start of a much longer decline."
+    ]
+  },
+  "verbosity": {
+    "description": "Terse, minimal phrasing vs. elaborate, verbose phrasing of the same content.",
+    "positive": [
+      "In order to fully appreciate the nuances and complexities of this particular situation, it is important to consider a wide range of interconnected factors, each of which contributes in its own subtle way to the overall picture.",
+      "Allow me to elaborate at considerable length on the many facets of this topic, exploring each dimension thoroughly before arriving at any sort of conclusion.",
+      "It should be noted, with all due consideration for the many perspectives involved, that this is a matter of substantial depth and nuance.",
+      "There are, in fact, numerous interrelated considerations that must be carefully weighed before one can responsibly proceed with any course of action."
+    ],
+    "negative": [
+      "Consider several factors here.",
+      "Let me explain briefly.",
+      "This matter has depth.",
+      "Weigh the options first."
+    ]
+  }
+}
