@@ -24,7 +24,7 @@ entirely on CPU with a small local model.
 ## How it works
 "formal" example sentences  ─┐
 ├─► mean activation (layer L) ─┐
-"casual" example sentences  ─┘                                ├─► direction = formal - casual
+"casual" example sentences  ─ ├─► direction = formal - casual
 ├─► mean activation (layer L) ─┘
 
 1. Pick a concept (e.g. `formality`) and a layer `L`.
